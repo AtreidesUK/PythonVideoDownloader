@@ -1,18 +1,25 @@
 import customtkinter as ctk
 from pytube import YouTube
+import os
+from pathlib import Path
+import shutil
 
 window = ctk.CTk()
 window.title("Atreides-Video-Downloader")
 window.geometry("500x350")
 
 def video_downloader():
+    file_name = 'Video_Downloader_Output'
+    os.chdir('C:\\Users\\user\\Documents\\')
+    Path(file_name).mkdir(exist_ok=True)
+
     link = url.get()
     yt = YouTube(link)
     print(yt.title)
     title_string.set(yt.title)
     view_string.set(yt.views)
     yd = yt.streams.get_highest_resolution()
-    yd.download('C:\\Users\\user\\Documents\\PythonVideoDownloader\\output')
+    yd.download('C:\\Users\\user\\Documents\\Video_Downloader_Output')
 
 title = ctk.CTkLabel(master = window, 
                      text = 'Atreides Video Downloader', 
