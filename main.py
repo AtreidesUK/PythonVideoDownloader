@@ -2,7 +2,6 @@ import customtkinter as ctk
 from pytube import YouTube
 import os
 from pathlib import Path
-import shutil
 
 window = ctk.CTk()
 window.title("Atreides-Video-Downloader")
@@ -11,15 +10,27 @@ window.geometry("500x350")
 def video_downloader():
     file_name = 'Video_Downloader_Output'
     os.chdir('C:\\Users\\user\\Documents\\')
-    Path(file_name).mkdir(exist_ok=True)
+    Path(file_name).mkdir(exist_ok=True) # Adds the file Video_Downloader_Output
 
     link = url.get()
     yt = YouTube(link)
     print(yt.title)
     title_string.set(yt.title)
     view_string.set(yt.views)
-    yd = yt.streams.get_highest_resolution()
-    yd.download('C:\\Users\\user\\Documents\\Video_Downloader_Output')
+    if audio_var.get() == "on":
+        file_name = 'Audio_Downloader_Output'
+        os.chdir('C:\\Users\\user\\Documents\\')
+        Path(file_name).mkdir(exist_ok=True) # Adds the file Video_Downloader_Output
+
+        yd = yt.streams.get_audio_only() #Downloads audio file only
+        yd.download('C:\\Users\\user\\Documents\\Audio_Downloader_Output')
+    else:
+        file_name = 'Video_Downloader_Output'
+        os.chdir('C:\\Users\\user\\Documents\\')
+        Path(file_name).mkdir(exist_ok=True) # Adds the file Video_Downloader_Output
+
+        yd = yt.streams.get_highest_resolution()
+        yd.download('C:\\Users\\user\\Documents\\Video_Downloader_Output')
 
 title = ctk.CTkLabel(master = window, 
                      text = 'Atreides Video Downloader', 
@@ -29,9 +40,16 @@ title.pack()
 download_frame = ctk.CTkFrame(master = window)
 url = ctk.StringVar()
 url_entry = ctk.CTkEntry(master = download_frame, textvariable = url)
-entry_button = ctk.CTkButton(master = download_frame, text = "download", command = video_downloader)
+audio_var = ctk.StringVar(value = "off")
+audio_switch = ctk.CTkCheckBox(
+    master = download_frame, 
+    text = 'Audio File',
+    variable = audio_var, onvalue = "on", offvalue = "off")
 download_frame.pack(pady = 10)
 url_entry.pack(side = 'left', padx = 10)
+audio_switch.pack()
+
+entry_button = ctk.CTkButton(master = window, text = "download", command = video_downloader)
 entry_button.pack()
 
 information_frame = ctk.CTkFrame(master = window)
